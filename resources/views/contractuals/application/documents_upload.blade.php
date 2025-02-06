@@ -164,6 +164,9 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="col-md-8 mx-auto text-center mt-2">
+                        <p>For any queries, please contact at <a href="mailto:{{$mailid}}">{{$mailid}}</a></p>
+                    </div>
                     </form>
                 </div>
             </div>

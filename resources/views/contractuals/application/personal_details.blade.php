@@ -363,11 +363,14 @@
                     </div>
  -->
                         <div class="row mb-0 mt-4">
-                            <div class="col-md-3 m-auto text-center">
+                            <div class="col-md-8 m-auto text-center">
                                 
                                 <button type="submit" class="btn btn-danger">
                                     {{ __('Save & Next') }}
                                 </button>
+                            </div>
+                            <div class="col-md-8 mx-auto text-center mt-2">
+                                <p>For any queries, please contact at <a href="mailto:{{$mailid}}">{{$mailid}}</a></p>
                             </div>
                         </div>
                     </form>

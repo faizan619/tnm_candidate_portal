@@ -245,11 +245,15 @@ class ContractualController extends Controller
 {
     // Fetch the requirement and associated project
     $requirements = Requirement::findOrFail($id);
+    // return $requirements->id;
     $project = Project::findOrFail($requirements->project_id);
-
+    // return $project;
+    $mailid = $project->support_mail_id;
+    // return $mailid;
+    
     // Check if the candidate has already applied for this requirement
     $applicationPersonal = ApplicationPersonal::where('candidateuser_id', Auth::user()->id)
-                                              ->where('requirement_id', $id)
+    ->where('requirement_id', $id)
                                               ->first();
 
     // Check if the user has exceeded the number of positions per candidate for this project
@@ -272,9 +276,9 @@ class ContractualController extends Controller
     $marital_status = LookupValue::where('type_id', 23)->get();
     $candidate_user = CandidateUser::findOrFail(Auth::user()->id);
     $selectedLocations = $applicationPersonal ? json_decode($applicationPersonal->locations, true) : [];
-
+   
     // Render the form with appropriate data
-    return view('contractuals.application.personal_details', compact('position', 'requirements', 'project_caste', 'genders', 'religions', 'marital_status', 'candidate_user', 'applicationPersonal', 'selectedLocations'))
+    return view('contractuals.application.personal_details', compact('position','mailid', 'requirements', 'project_caste', 'genders', 'religions', 'marital_status', 'candidate_user', 'applicationPersonal', 'selectedLocations'))
         ->with('info', $applicationPersonal ? 'You are updating your existing application.' : 'You are creating a new application.');
 }
 
@@ -345,9 +349,14 @@ class ContractualController extends Controller
         ->first();
         $qualifications=RequirementQualification::where('requirement_id',$application->requirement_id)->get();
         
+        $requirements = Requirement::findOrFail($application->requirement_id);
+        $project = Project::findOrFail($requirements->project_id);
+        $mailid = $project->support_mail_id;
+        // return $mailid;
+
         $educationRecords = ApplicationEducation::where('application_id', $application_id)->get();
         $certificationRecords = ApplicationCertification::where('application_id', $application_id)->get();
-        return view('contractuals.application.education', compact('application', 'qualifications', 'educationRecords','certificationRecords'));
+        return view('contractuals.application.education', compact('application','mailid', 'qualifications', 'educationRecords','certificationRecords'));
     }
 
     
@@ -410,6 +419,7 @@ class ContractualController extends Controller
                 // Create new record
                 ApplicationCertification::create([
                     'application_id' => $request['application_id'],
+                    'certification_number' => $request['certification_number'][$key],
                     'course' => $request['course'][$key],
                     'subject' => $request['subject'][$key],
                     'percentage' => $request['percentage'][$key],
@@ -434,10 +444,14 @@ class ContractualController extends Controller
         ->where('candidateuser_id', Auth::id()) 
         ->first();
 
-        
+        $requirements = Requirement::findOrFail($application->requirement_id);
+        $project = Project::findOrFail($requirements->project_id);
+        $mailid = $project->support_mail_id;
+
+        // return $mailid;
          $workExperienceData = ApplicationExperience::where('application_id', $application_id)->get();     
 
-        return view('contractuals.application.work_experience', compact('application', 'workExperienceData'));
+        return view('contractuals.application.work_experience', compact('application','mailid' ,'workExperienceData'));
     }
 
     public function application_experience_store(Request $request)
@@ -518,6 +532,11 @@ class ContractualController extends Controller
     {
 
         $application=ApplicationPersonal::select('id','requirement_id','post_applied_for','locations','physically_challenged')->findOrFail($application_id);
+
+        $requirements = Requirement::findOrFail($application->requirement_id);
+        $project = Project::findOrFail($requirements->project_id);
+        $mailid = $project->support_mail_id;
+
         $requirements=Requirement::select('id','document_uploaded','age_proof_mandatory')->find($application->requirement_id);
         
         $documentUpload= explode(',', $requirements->document_uploaded);
@@ -525,7 +544,7 @@ class ContractualController extends Controller
         $oneYearAgo = Carbon::now()->subYear();
         $applicationDocuments=ApplicationDocument::where('application_id',$application_id)->get();
         
-        return view('contractuals.application.documents_upload', compact('application','documentUpload','candidateUser','oneYearAgo','requirements','applicationDocuments'));
+        return view('contractuals.application.documents_upload', compact('application','mailid','documentUpload','candidateUser','oneYearAgo','requirements','applicationDocuments'));
     }
 
     
@@ -742,14 +761,15 @@ public function application_upload_store(Request $request)
         $candidateUserId = Auth::User()->id;
         $applicationPersonal = ApplicationPersonal::where('candidateuser_id', $candidateUserId)->where('id', $applicationId)->first();
         $applicationEducation = ApplicationEducation::where('application_id', $applicationId)->get();
+        $applicationCertification = ApplicationCertification::where('application_id',$applicationId)->get();
         $applicationExperience = ApplicationExperience::where('application_id', $applicationId)->get();
         $applicationDocument = ApplicationDocument::where('application_id', $applicationId)->get();
 
         $requirements=Requirement::findOrFail($applicationPersonal->requirement_id);
         $project=Project::select('candidate_undertaking')->findOrFail($requirements->project_id);
         
-        
-        return view('contractuals.application.preview', compact('applicationPersonal', 'applicationEducation', 'applicationExperience', 'applicationDocument','project'));
+        // return $applicationCertification;
+        return view('contractuals.application.preview', compact('applicationPersonal','applicationCertification', 'applicationEducation', 'applicationExperience', 'applicationDocument','project'));
     }
 
     public function finalsubmit(Request $request, $application_id)

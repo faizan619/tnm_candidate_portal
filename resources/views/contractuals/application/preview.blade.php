@@ -110,7 +110,7 @@
                                        <td><strong>Mode:</strong></td>
                                     </tr>
                                  @foreach ($applicationEducation as $education)
-                                    
+
                                     <tr>
                                         <td>{{ $education->stream }}</td>
                                         <td>{{ $education->year_of_passing }}</td>
@@ -121,6 +121,39 @@
                                       
                                 @endforeach
                             </table>
+
+                            <table class="table table-bordered table-light">
+                                <tr class="table-dark">
+                                    <td colspan="8"><h5 class="text-white">Certification Details <a href="{{route('application.education',$applicationPersonal->id)}}" class="btn btn-sm btn-danger"><i class="fas fa-edit"></i> Edit</a></h5> </td>
+                                </tr>
+                                <tr>
+                                <tr>
+                                    <td><strong>Certification No.</strong></td>
+                                    <td><strong>Course</strong></td>
+                                    <td><strong>Subject</strong></td>
+                                    <td><strong>Percentage</strong></td>
+                                    <td><strong>Passing year</strong></td>
+                                    <td><strong>Institute</strong></td>
+                                    <td><strong>Duration</strong></td>
+                                    <td><strong>Mode</strong></td>
+                                </tr>
+                                    </tr>
+                                 @foreach ($applicationCertification as $certificate)
+                                    
+                                    <tr>
+                                        <td>{{ $certificate->certification_number }}</td>
+                                        <td>{{ $certificate->course }}</td>
+                                        <td>{{ $certificate->subject }}</td>
+                                        <td>{{ $certificate->percentage }}</td>
+                                        <td>{{ $certificate->passing_year }}</td>
+                                        <td>{{ $certificate->institute }}</td>
+                                        <td>{{ $certificate->duration }}</td>
+                                        <td>{{ $certificate->mode }}</td>
+                                    </tr>
+                                      
+                                @endforeach
+                            </table>
+
                             <table class="table table-bordered table-light">
                                 <tr class="table-dark">
                                     <td colspan="7"><h5 class="text-white">Experience Details <a href="{{route('application.experience',$applicationPersonal->id)}}" class="btn btn-sm btn-danger"><i class="fas fa-edit"></i> Edit</a></h5></td>

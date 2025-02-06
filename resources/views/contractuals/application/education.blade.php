@@ -165,6 +165,16 @@
                 <div class="bg-light p-2">
                     <div class="row">
                         <div class="col-md-4 mb-2">
+                            <label for="certification_number">Certification Number:</label>
+                            <input type="text" class="form-control" name="certification_number[]" id="certification_number" value="{{ $certification->certification_number }}">
+                        </div>
+                        <!-- @foreach(old('certification_number', []) as $index => $value)
+                            <div class="col-md-4 mb-2">
+                                <label for="certification_number_{{ $index }}">Certification Number {{ $index + 1 }}:</label>
+                                <input type="text" class="form-control" name="certification_number[]" id="certification_number_{{ $index }}" value="{{ $value }}">
+                            </div>
+                        @endforeach -->
+                        <div class="col-md-4 mb-2">
                             <label>Course</label>
                             <input type="text" name="course[]" class="form-control" value="{{ $certification->course }}">
                         </div>
@@ -226,6 +236,17 @@
             <div class="bg-light p-2">
                 <div class="row">
                     <div class="col-md-4 mb-2">
+                        <label for="certification_number">Certification Number:</label>
+                        <input type="text" class="form-control" name="certification_number[]" id="certification_number" value="{{ old('certification_number.0') }}">
+                    </div>
+                    <!-- @foreach(old('certification_number', []) as $index => $value)
+                        <div class="col-md-4 mb-2">
+                            <label for="certification_number_{{ $index }}">Certification Number {{ $index + 1 }}:</label>
+                            <input type="text" class="form-control" name="certification_number[]" id="certification_number_{{ $index }}" value="{{ $value }}">
+                        </div>
+                    @endforeach -->
+
+                    <div class="col-md-4 mb-2">
                         <label>Course</label>
                         <input type="text" name="course[]" class="form-control">
                     </div>
@@ -233,11 +254,11 @@
                         <label>Subject</label>
                         <input type="text" name="subject[]" class="form-control">
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-4 mb-2">
                         <label>Percentage %</label>
                         <input type="text" name="percentage[]" class="form-control">
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-md-4 mb-2">
                         <label>Passing Year</label>
                         <select name="cer_passing_year[]" class="form-control">
                             <option>Select Year</option>
@@ -250,12 +271,12 @@
                             @endfor
                         </select>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-4 mb-2">
                         <label>Institute</label>
                         <input type="text" name="cer_institute[]" class="form-control">
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4 mb-2">
                         <label>Duration</label>
                         <input type="text" name="duration[]" class="form-control">
@@ -309,6 +330,9 @@
                                         {{ __('Save & Next') }}
                                     </button>
                                 </div>
+                            </div>
+                            <div class="col-md-8 mx-auto text-center mt-2">
+                                <p>For any queries, please contact at <a href="mailto:{{$mailid}}">{{$mailid}}</a></p>
                             </div>
                         </form>
                     </div>
