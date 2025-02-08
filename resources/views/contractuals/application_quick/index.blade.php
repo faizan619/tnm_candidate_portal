@@ -185,10 +185,9 @@
 
                         <div class="row mb-0 mt-4">
                             <div class="col-md-3 m-auto text-center">
-                                
-                                <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#exampleModal">
-                                    {{ __('Submit') }}
-                                </button>
+                                <button type="button" class="btn btn-danger" onclick="openModel()">
+									{{ __('Submit') }}
+								</button>
                             </div>
                         </div>
                     </form>
@@ -200,26 +199,20 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="showPopupModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h5 class="modal-title" id="exampleModalLabel">Terms & Confitions</h5>
       </div>
       <div class="modal-body">
-      <h3>Terms & Conditions</h3>
-        <div class="responsive" 
-            {!!$projects->terms_conditions!!}
-        </div>
+        <!-- <h3>Terms & Conditions</h3> -->
+        <div class="responsive" {!! $projects->terms_conditions !!}></div>
 
         <h3>General Instructions</h3>
-        {!!$projects->general_instructions_candidate!!}
+        {!! $projects->general_instructions_candidate !!}
 
         <div class="row p-4">
-
             <div class="form-check text-danger" style="font-size:18px">
               <input type="checkbox" class="form-check-input" id="acceptTerms" style="border: solid 2px #494949 !important;">
               <label class="form-check-label" for="acceptTerms"><b>I accept the above terms and conditions and <a href="https://www.tnmhr.com/privacy-policy/" target="_blank">privacy policy</a></b></label>
@@ -228,47 +221,43 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" disabled class="btn btn-primary">Confirm</button>
       </div>
     </div>
   </div>
 </div>
 
+@endsection
+
+@section('script')
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Select the modal, checkbox, and the apply button
-        var acceptCheckbox = document.getElementById('acceptTerms');
-        var submitButton = document.querySelector('button[data-toggle="modal"]');
-        var modal = document.getElementById('exampleModal');
-        var modalCloseButton = modal.querySelector('.close');
-        
-        // Listen for checkbox change
-        acceptCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                submitButton.type = 'submit';  // Change button type to submit when checked
-                submitButton.removeAttribute('data-toggle');  // Remove data-toggle for modal
-                submitButton.removeAttribute('data-target');  // Remove data-target for modal
+    function openModel() {
+        $('#showPopupModel').modal('show');
+    }
+
+    $(document).ready(function () {
+        // Enable the Confirm button when the checkbox is checked
+        $('#acceptTerms').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('.modal-footer .btn-primary').prop('disabled', false);
             } else {
-                submitButton.type = 'button';  // Reset the button type to button if unchecked
-                submitButton.setAttribute('data-toggle', 'modal');  // Add back modal trigger
-                submitButton.setAttribute('data-target', '#exampleModal');  // Add modal target back
+                $('.modal-footer .btn-primary').prop('disabled', true);
             }
         });
+	
+        // Change submit button type when Confirm is clicked
+        $('.modal-footer .btn-primary').on('click', function () {
+           
+			 let submitButton = $('button[onclick="openModel()"]');
+            submitButton.attr('type', 'submit'); // Change type to submit
+            submitButton.removeAttr('onclick'); // Remove onclick attribute
+            $('#showPopupModel').modal('hide'); // Close the modal
 
-        // Optional: If the user closes the modal without accepting, reset the button
-        modalCloseButton.addEventListener('click', function() {
-            submitButton.type = 'button';  // Keep the button type as 'button' if modal is closed
-            submitButton.setAttribute('data-toggle', 'modal');  // Add modal trigger back
-            submitButton.setAttribute('data-target', '#exampleModal');  // Add modal target back
-            acceptCheckbox.checked = false;  // Uncheck the terms and conditions checkbox
         });
     });
 </script>
 
 
-@endsection
-
-@section('script')
 <script>
     var fetchStateDistrictUrl = "{{ route('fetch.state.district') }}";
 </script>
