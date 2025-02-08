@@ -37,14 +37,21 @@ class ContractualController extends Controller
     {
         $currentDate = \Carbon\Carbon::now();
 
+    // $projects = Project::with([
+    //         'client',
+    //         'requirements' => function ($query) use ($currentDate) {
+    //             $query->where('website_publish_date', '<=', $currentDate);
+    //         },
+    //         'projectNotifications'
+    //     ])
     $projects = Project::with([
             'client',
             'requirements' => function ($query) use ($currentDate) {
-                $query->where('website_publish_date', '<=', $currentDate);
+                $query->where('website_publish_date', '<=', $currentDate)->where('status',1);
             },
             'projectNotifications'
         ])
-        ->where('status', 1)
+        // ->where('status', 1)
         ->orderBy('start_date', 'desc')
         ->paginate(10);
 
@@ -750,7 +757,8 @@ public function application_upload_store(Request $request)
     $requirements = Requirement::findOrFail($requirementId);
     $project = Project::select('candidate_undertaking')->findOrFail($requirements->project_id);
 
-    return view('contractuals.application.preview', compact('applicationPersonal', 'applicationEducation', 'applicationExperience', 'applicationDocument', 'project'));
+    $applicationCertification = ApplicationCertification::where('application_id',$applicationId)->get();
+    return view('contractuals.application.preview', compact('applicationPersonal','applicationCertification' ,'applicationEducation', 'applicationExperience', 'applicationDocument', 'project'));
 }
 
 
