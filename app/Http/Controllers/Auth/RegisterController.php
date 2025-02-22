@@ -63,7 +63,8 @@ class RegisterController extends Controller
 
 
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            // 'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'gender' => 'required|string',
             'email' => 'required|string|email|max:255|unique:mysql.candidate_users',
             'mobile' => 'required|string|max:10|unique:mysql.candidate_users',

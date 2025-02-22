@@ -293,6 +293,14 @@ class ContractualController extends Controller
 
     public function application_personal_details_store(Request $request)
     {
+        // return "Helo world";
+        $request->validate([
+            'name' => ['required', 'string'],
+            'father_name' => ['required', 'string'],
+            'mother_name' => ['required', 'string'],
+            'spouse' => ['nullable', 'string'], 
+        ]);
+
        /* $request->validate([
             'captcha' => ['required', 'captcha']
             ], [
@@ -340,8 +348,20 @@ class ContractualController extends Controller
         $applicationPersonal->mobile = $request->mobile;
         $applicationPersonal->email = $request->email;
         $applicationPersonal->status = "Incomplete";
+        // return $request->requirement_id;
+        $requirement = Requirement::find($request->requirement_id);
+        $requirementId =  $requirement->id;
+        $project = Project::find($requirement->project_id);
+        $projectRef = $project->project_ref;
+        if($applicationPersonal->save()){
+            $applicationPersonal->app_ref = "{$projectRef}_{$requirementId}_{$applicationPersonal->id}";
+            $applicationPersonal->save();
+            $folderPath = "{$projectRef}/{$projectRef}_{$requirementId}/{$projectRef}_{$requirementId}_{$applicationPersonal->id}";
+            if (!Storage::disk('public')->exists($folderPath)) {
+                Storage::disk('public')->makeDirectory($folderPath);
+            }
+        }
 
-        $applicationPersonal->save();
         $application_id = $applicationPersonal->id;
 
         return redirect()->route('application.education', compact('application_id'))->with('success', 'Application personal details saved successfully.');
