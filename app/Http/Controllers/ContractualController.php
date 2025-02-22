@@ -605,8 +605,18 @@ public function application_upload_store(Request $request)
             }
             $existingCandidateDocuments->each->delete();
 
+
+            
+            $data = ApplicationPersonal::find($applicationId);
+            $appRef =  $data->app_ref;
+            $originalName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $newFileName = $documentType . '_' . $appRef . '.' . $extension;
+            
+            $filePath = $file->storeAs('documents', $newFileName, 'public');            
+            // return $filePath;
             // Store new document
-            $filePath = $file->store('documents', 'public');
+            // $filePath = $file->store('documents', 'public');
             ApplicationDocument::create([
                 'application_id' => $applicationId,
                 'document_type' => $documentType,
@@ -635,8 +645,22 @@ public function application_upload_store(Request $request)
         }
         $existingCandidateDocuments->each->delete();
 
+
+        
+        $data = ApplicationPersonal::find($applicationId);
+        $appRef =  $data->app_ref;
+        $originalName = $request->file('upload.age_proof')->getClientOriginalName();
+        $extension = $request->file('upload.age_proof')->getClientOriginalExtension();
+        $newFileName = 'Age_Proof_' . $appRef . '.' . $extension;
+        // return $newFileName;
+
+        // Store the file with the new filename
+        $filePath = $request->file('upload.age_proof')->storeAs('documents', $newFileName, 'public');
+        // $photoPath = $request->file('photo')->store('photos', 'public');
+
+
         // Store new age proof document
-        $filePath = $request->file('upload.age_proof')->store('documents', 'public');
+        // $filePath = $request->file('upload.age_proof')->store('documents', 'public');
         ApplicationDocument::create([
             'application_id' => $applicationId,
             'document_type' => 'Age Proof',
@@ -664,8 +688,22 @@ public function application_upload_store(Request $request)
         }
         $existingCandidateDocuments->each->delete();
 
+
+        
+        $data = ApplicationPersonal::find($applicationId);
+        $appRef =  $data->app_ref;
+        $originalName = $request->file('upload.disability_certificate')->getClientOriginalName();
+        $extension = $request->file('upload.disability_certificate')->getClientOriginalExtension();
+        $newFileName = 'Disability_Certificate_' . $appRef . '.' . $extension;
+        // return $newFileName;
+
+        // Store the file with the new filename
+        $filePath = $request->file('upload.disability_certificate')->storeAs('documents', $newFileName, 'public');
+        // $photoPath = $request->file('photo')->store('photos', 'public');
+
+
         // Store new disability document
-        $filePath = $request->file('upload.disability_certificate')->store('documents', 'public');
+        // $filePath = $request->file('upload.disability_certificate')->store('documents', 'public');
         ApplicationDocument::create([
             'application_id' => $applicationId,
             'document_type' => 'Disability Certificate',
@@ -693,7 +731,17 @@ public function application_upload_store(Request $request)
         }
         $existingCandidateDocuments->each->delete();
 
-        $photoPath = $request->file('photo')->store('photos', 'public');
+        $data = ApplicationPersonal::find($applicationId);
+        $appRef =  $data->app_ref;
+        $originalName = $request->file('photo')->getClientOriginalName();
+        $extension = $request->file('photo')->getClientOriginalExtension();
+        $newFileName = 'photo_' . $appRef . '.' . $extension;
+        // return $newFileName;
+
+        // Store the file with the new filename
+        $photoPath = $request->file('photo')->storeAs('photos', $newFileName, 'public');
+        // $photoPath = $request->file('photo')->store('photos', 'public');
+
         ApplicationDocument::create([
             'application_id' => $applicationId,
             'document_type' => 'photo',
@@ -721,7 +769,19 @@ public function application_upload_store(Request $request)
         }
         $existingCandidateDocuments->each->delete();
 
-        $signaturePath = $request->file('signature')->store('signatures', 'public');
+        
+        $data = ApplicationPersonal::find($applicationId);
+        $appRef =  $data->app_ref;
+        $originalName = $request->file('signature')->getClientOriginalName();
+        $extension = $request->file('signature')->getClientOriginalExtension();
+        $newFileName = 'signature_' . $appRef . '.' . $extension;
+        // return $newFileName;
+
+        // Store the file with the new filename
+        $signaturePath = $request->file('signature')->storeAs('signatures', $newFileName, 'public');
+        // $photoPath = $request->file('photo')->store('photos', 'public');
+
+        // $signaturePath = $request->file('signature')->store('signatures', 'public');
         ApplicationDocument::create([
             'application_id' => $applicationId,
             'document_type' => 'signature',
@@ -749,8 +809,21 @@ public function application_upload_store(Request $request)
         }
         $existingCandidateDocuments->each->delete();
 
+
+        
+        $data = ApplicationPersonal::find($applicationId);
+        $appRef =  $data->app_ref;
+        $originalName = $request->file('cv_upload')->getClientOriginalName();
+        $extension = $request->file('cv_upload')->getClientOriginalExtension();
+        $newFileName = 'cv_' . $appRef . '.' . $extension;
+        // return $newFileName;
+
+        // Store the file with the new filename
+        $cvPath = $request->file('cv_upload')->storeAs('cv', $newFileName, 'public');
+        // $photoPath = $request->file('photo')->store('photos', 'public');
+
         // Store new CV
-        $cvPath = $request->file('cv_upload')->store('cv', 'public');
+        // $cvPath = $request->file('cv_upload')->store('cv', 'public');
         ApplicationDocument::create([
             'application_id' => $applicationId,
             'document_type' => 'cv',
