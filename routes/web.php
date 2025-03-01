@@ -25,6 +25,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 |
 */
 
+Route::get('/job-openings',[HomeController::class,'jobOpenings'])->name('jobOpenings');
 Route::get('/', function () {
     return view('auth.login');
 });
@@ -79,7 +80,9 @@ Route::middleware(['auth'])->group(function ()
     Route::post('/application/personal_details/store', [ContractualController::class, 'application_personal_details_store'])->name('application.personal_details.store');
     Route::get('/application/education/{application_id}', [ContractualController::class, 'application_education'])->name('application.education');
     Route::post('/application/education', [ContractualController::class, 'application_education_store'])->name('application.education.store');
+
     Route::get('/application/experience/{application_id}', [ContractualController::class, 'application_experience'])->name('application.experience');
+
     Route::post('/application/experience', [ContractualController::class, 'application_experience_store'])->name('application.experience.store');
     Route::get('/application/upload/{application_id}', [ContractualController::class, 'application_upload'])->name('application.upload');
     Route::post('/application/upload', [ContractualController::class, 'application_upload_store'])->name('application.upload.store');

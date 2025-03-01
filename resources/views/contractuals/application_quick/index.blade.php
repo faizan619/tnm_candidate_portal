@@ -122,7 +122,7 @@
                             </div>
                             <div class="col-md-6" id="any_graduate">
                                 <label>Stream <span class="text-danger">*</span></label>
-                                <select name="qualification" class="form-control" required>
+                                <select name="stream" class="form-control" required>
                                     <option disabled selected>Select Qualification</option>
                                     @foreach($streams as $stream)
                                     <option>{{$stream->value_description}}</option>
@@ -185,9 +185,9 @@
 
                         <div class="row mb-0 mt-4">
                             <div class="col-md-3 m-auto text-center">
-                                <button type="button" class="btn btn-danger" onclick="openModel()">
-									{{ __('Submit') }}
-								</button>
+                                <button type="button" class="btn btn-danger" id="submitButton">
+                                    {{ __('Submit') }}
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -220,9 +220,10 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" disabled class="btn btn-primary">Confirm</button>
-      </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmSubmit">Confirm</button>
+    </div>
+
     </div>
   </div>
 </div>
@@ -230,33 +231,6 @@
 @endsection
 
 @section('script')
-<script>
-    function openModel() {
-        $('#showPopupModel').modal('show');
-    }
-
-    $(document).ready(function () {
-        // Enable the Confirm button when the checkbox is checked
-        $('#acceptTerms').on('change', function () {
-            if ($(this).is(':checked')) {
-                $('.modal-footer .btn-primary').prop('disabled', false);
-            } else {
-                $('.modal-footer .btn-primary').prop('disabled', true);
-            }
-        });
-	
-        // Change submit button type when Confirm is clicked
-        $('.modal-footer .btn-primary').on('click', function () {
-           
-			 let submitButton = $('button[onclick="openModel()"]');
-            submitButton.attr('type', 'submit'); // Change type to submit
-            submitButton.removeAttr('onclick'); // Remove onclick attribute
-            $('#showPopupModel').modal('hide'); // Close the modal
-
-        });
-    });
-</script>
-
 
 <script>
     var fetchStateDistrictUrl = "{{ route('fetch.state.district') }}";
@@ -290,13 +264,18 @@
     });
 
     $(document).ready(function() {
-     $('#any_graduate').hide();
-    $('#qualification').on('change', function() {
+     $('#any_graduate').hide(); // Ensure it's hidden on page load
+
+    $('#qualification').on('change', function () {
         var selectedQualification = $(this).val();
-        if (selectedQualification === 'Any Graduate') {
+        console.log("Selected Qualification:", selectedQualification); // Debugging
+
+        if (selectedQualification.trim() === 'Any Graduate') {
             $('#any_graduate').show();
+            $('#any_graduate select').attr('required', true); // Add required
         } else {
             $('#any_graduate').hide();
+            $('#any_graduate select').removeAttr('required'); // Remove required
         }
     });
 
@@ -306,9 +285,41 @@
         
         handlePincodeInput(type);
     });
+
+      $('#submitButton').on('click', function () {
+        console.log("Submit button clicked!"); // Debugging step
+
+        var form = $('#form');
+
+        $('#form').parsley().validate();
+        if (!$('#form').parsley().isValid()) {
+            console.log("Validation errors found!");
+            $('.parsley-error').each(function() {
+                console.log("Field with error:", $(this).attr('name'));
+            });
+        } else {
+            $("#showPopupModel").modal("show");
+        }
+
+    });
+
+       $('#confirmSubmit').prop('disabled', true); // Disable button by default
+
+    $('#acceptTerms').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('#confirmSubmit').prop('disabled', false); // Enable button
+        } else {
+            $('#confirmSubmit').prop('disabled', true); // Disable button
+        }
+    });
 });
 
 
+document.getElementById("confirmSubmit").addEventListener("click", function() {
+    document.getElementById("form").submit();
+});
+
+    
     
 </script>
 @endsection
