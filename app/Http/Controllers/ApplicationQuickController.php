@@ -27,7 +27,7 @@ class ApplicationQuickController extends Controller
         $projects = Project::select('id', 'application_mode', 'terms_conditions', 'general_instructions_candidate')->findOrFail($requirements->project_id);
         return view('contractuals.application_quick.index',compact('requirements','position','genders','qualifications','streams','projects'));
     }
-
+// project #, Req Id, and running series no.
     public function store(Request $request)
     {
 
@@ -37,6 +37,9 @@ class ApplicationQuickController extends Controller
                 'captcha.captcha' => 'The CAPTCHA is incorrect. Please try again.',
         ]);
 
+        $reqId = Requirement::find($request->requirement_id);
+        $projectId = Project::find($reqId->project_id);
+        $projectRef =  $projectId->project_ref;
         
 
         $cv_file = $request->file('cv_file')->store('cv', 'public');
@@ -59,7 +62,11 @@ class ApplicationQuickController extends Controller
         $applicationQuick->state = $request->present_state;
         $applicationQuick->district = $request->present_district;
         $applicationQuick->cv_file = $cv_file;
-        $applicationQuick->save();
+        if($applicationQuick->save()){
+            $app_ref = "$projectRef-$request->requirement_id-$applicationQuick->id";
+            $applicationQuick->app_ref = $app_ref;
+            $applicationQuick->save();
+        }
 
        
         return redirect()->route('application.success')->with('success', 'Application submitted successfully.');
