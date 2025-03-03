@@ -1,45 +1,83 @@
 @extends('layouts.app')
 @section('content')
-<div class="container" style="width: 70%;">
 
-
+<!-- <div class="row row-cols-1 row-cols-md-3 g-4">
     @foreach ($projects as $project)
 
-    <div class="card my-3 p-3 shadow">
-        <div class="d-flex justify-content-between">
-            <div>
-                <h6 style="font-weight:bold">Ref #: <span style="text-decoration: underline;">{{$project->project_ref}}</span> - <span style="text-decoration: underline;">{{$project->title}}</span></h6>
+    <div class="col">
+    <div class="card my-3 p-3 shadow" style="height:370px">
+            <div class="d-flex justify-content-between">
+                <div style="width: 70%;">
+                    <h6 style="font-weight:bold">Ref #: <span style="text-decoration: underline;">{{$project->project_ref}}</span> - <span style="text-decoration: underline;">{{$project->title}}</span></h6>
+                </div>
+                <p style="font-size: 15px;font-weight:bold" class="@if($project->status == 1) text-success @else text-danger @endif">Status : @if ($project->status == 1)
+                        Active
+                        @else
+                        Close
+                    @endif
+                </p>
             </div>
-            <p style="font-size: 15px;font-weight:bold" class="@if($project->status == 1) text-success @else text-danger @endif">Status : @if ($project->status == 1)
-                Active
-                @else
-                Close
-                @endif</p>
-        </div>
-        <div class="mb-2">
-            <span class="mx-2">Locations : </span>
-            <div class="d-flex flex-wrap">
-                @foreach ($project->projectLocations as $loc)
-                <p class="badge bg-secondary p-2 m-1">{{$loc->state}} , {{$loc->district}} , {{$loc->block}}</p>
-                @endforeach
+            <div class="mb-2">
+                <span class="mx-2">Locations : </span>
+                <div class="d-flex flex-wrap">
+                    @foreach ($project->projectLocations as $loc)
+                    <p class="badge bg-secondary p-2 m-1">{{$loc->state}} , {{$loc->district}} , {{$loc->block}}</p>
+                    @endforeach
+                </div>
+            </div>
+            <div class="d-flex">
+                <p style="font-size:15px">Last Date : {{\Carbon\Carbon::parse($project->expiry_date)->format('d-m-Y')}}</p>
+            </div>
+            <div class="mt-2">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#positionModal{{ $project->id }}">View Position</button>
+                @if($project->description)
+                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ $project->id }}">
+                    Read more
+                </button>
+                @endif
             </div>
         </div>
-        <div class="d-flex">
-            <i style="font-size:15px">Date : {{\Carbon\Carbon::parse($project->start_date)->format('d-m-Y')}}</i>&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp; <i style="font-size:15px">End Date : {{\Carbon\Carbon::parse($project->expiry_date)->format('d-m-Y')}}</i>
+    </div>
 
-        </div>
-        <div class="mt-2">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#positionModal{{ $project->id }}">View Position</button>
-            @if($project->description)
-            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ $project->id }}">
-                Read more
-            </button>
-            @endif
+    @endforeach
+</div> -->
+<div class="row">
+    @foreach ($projects as $project)
+    <div class="col-md-4">
+        <div class="card my-3 p-3 shadow" style="height:400px;overflow-y:auto;">
+            <div class="d-flex justify-content-between">
+                <div style="width: 70%;">
+                    <h6 style="font-weight:bold">Ref #: <span style="text-decoration: underline;">{{$project->project_ref}}</span> - <span style="text-decoration: underline;">{{$project->title}}</span></h6>
+                </div>
+                <p style="font-size: 15px;font-weight:bold" class="@if($project->status == 1) text-success @else text-danger @endif">Status : @if ($project->status == 1)
+                        Active
+                        @else
+                        Close
+                    @endif
+                </p>
+            </div>
+            <div class="mb-2">
+                <span class="mx-2">Locations : </span>
+                <div class="d-flex flex-wrap">
+                    @foreach ($project->projectLocations as $loc)
+                    <p class="badge bg-secondary p-2 m-1">{{$loc->state}} , {{$loc->district}} , {{$loc->block}}</p>
+                    @endforeach
+                </div>
+            </div>
+            <div class="d-flex">
+                <p style="font-size:15px">Last Date : {{\Carbon\Carbon::parse($project->expiry_date)->format('d-m-Y')}}</p>
+            </div>
+            <div class="mt-auto">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#positionModal{{ $project->id }}">View Position</button>
+                @if($project->description)
+                <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ $project->id }}">
+                    Read more
+                </button>
+                @endif
+            </div>
         </div>
     </div>
     @endforeach
-
-
 </div>
 
 <!-- Modal for Project Description -->
@@ -69,7 +107,7 @@
 @if($project) {{-- Check if the project exists --}}
 <div class="modal fade" id="positionModal{{ $project->id }}" tabindex="-1" aria-labelledby="positionModalLabel{{ $project->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-        <div class="modal-content">
+        <div class="modal-content modal-lg">
             <div class="modal-header">
                 <h5 class="modal-title" id="positionModalLabel{{ $project->id }}">Available Positions</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -80,7 +118,7 @@
                         <tr>
                             <th>Position</th>
                             <th>Location</th>
-                            <th>Start Date</th>
+                            <!-- <th>Start Date</th> -->
                             <th>End Date</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -92,7 +130,7 @@
                         <tr>
                             <td>{{$requirement['position']}}</td>
                             <td>{{$requirement['locations']}}</td>
-                            <td>{{\Carbon\Carbon::parse($requirement['start_date_time'])->format('d-m-Y')}}</td>
+                            <!-- <td>{{\Carbon\Carbon::parse($requirement['start_date_time'])->format('d-m-Y')}}</td> -->
                             <td>{{\Carbon\Carbon::parse($requirement['expiry_date_time'])->format('d-m-Y')}}</td>
                             <td>@if($requirement['status']==1) Active @else Close @endif</td>
                             <td><a class="btn btn-sm btn-danger" href="{{ url('/contractuals/requirements', [$requirement['id'], $requirement['position']]) }}" class="mb-1">Apply</a></td>
