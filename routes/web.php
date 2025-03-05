@@ -26,6 +26,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 */
 
 Route::get('/job-openings',[HomeController::class,'jobOpenings'])->name('jobOpenings');
+Route::post('/job-openings-filter',[HomeController::class,'FilterJobOpenings'])->name('FilterJobOpenings');
+
 Route::get('/', function () {
     return view('auth.login');
 });
