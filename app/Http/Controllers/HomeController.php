@@ -54,35 +54,32 @@ class HomeController extends Controller
 
     public function FilterJobOpenings(Request $request)
     {
-        // return $request;
         $clientName = $request->input('client_name');
         $projectTitle = $request->input('project_title');
 
         // Step 1: Query Projects with basic filters
-        $query = Project::with('requirements', 'projectNotifications')
-            ->where('status', 1);
+        $query = Project::with('requirements')->where('status', 1);
 
         if ($projectTitle) {
             $query->where('title', 'like', '%' . $projectTitle . '%');
         }
 
-        // Step 2: Apply pagination
-        $projects = $query->orderBy('start_date', 'desc')->paginate(10);
-
-        // Step 3: Fetch related client data
-        $clientIds = $projects->pluck('client_id')->unique()->filter();
-        $clientsQuery = ClientHo::whereIn('id', $clientIds);
+        // Step 2: Apply client filter if clientName is provided
         if ($clientName) {
-            $clientsQuery->where('short_name', 'like', '%' . $clientName . '%');
+            $clientIds = ClientHo::where('short_name', 'like', '%' . $clientName . '%')
+                ->pluck('id');
+            $query->whereIn('client_id', $clientIds);
         }
-        $clients = $clientsQuery->get();
+
+        // Step 3: Apply pagination
+        $projects = $query->orderBy('start_date', 'desc')->paginate(10);
+        // return $projects;
+
+        // Step 4: Fetch related client data for the projects
         $filters = Project::with(['client' => function ($query) {
             $query->select('id', 'short_name');
-        }])
-            ->select('id', 'client_id', 'title')
-            ->where('status', 1)
-            ->orderBy('start_date', 'desc')
-            ->get();
+        }])->select('id', 'client_id', 'title')->where('status', 1)->orderBy('start_date', 'desc')->get();
+
         return view('candidate.jobs.openings', compact('projects', 'filters'));
     }
 }
