@@ -1,4 +1,72 @@
 @extends('layouts.app')
+
+@section('style')
+<style>
+    /* Tooltip container */
+    .tooltip1 {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        cursor: pointer;
+        /* Change cursor to indicate hoverable */
+    }
+
+    /* Tooltip text */
+    .tooltip1 .tooltip1text {
+        visibility: hidden;
+        width: 320px;
+        /* Increased width to accommodate list */
+        background-color: #555;
+        color: #fff;
+        text-align: left;
+        padding: 5px;
+        border-radius: 6px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+        /* Position the tooltip text */
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -100px;
+        /* Adjusted for the new width */
+
+        /* Fade in tooltip */
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    /* Tooltip arrow */
+    .tooltip1 .tooltip1text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    /* Show the tooltip text when you mouse over the tooltip container */
+    .tooltip1:hover .tooltip1text {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Style for the list inside tooltip */
+    .tooltip1 .tooltip1text ul {
+        padding-left: 20px;
+        margin: 0;
+        list-style-type: disc;
+    }
+
+    .tooltip1 .tooltip1text li {
+        margin-bottom: 5px;
+    }
+</style>
+@endsection
+
 @section('content')
 
 <div class="row mb-2">
@@ -11,22 +79,22 @@
                         <option selected disabled>Select Client</option>
                         @php $clientNames = []; @endphp
                         @foreach($filters as $filter)
-                            @php $clientName = $filter->client->short_name; @endphp
-                            @if (!in_array($clientName, $clientNames))
-                                <option value="{{ $clientName }}" {{ request('client_name') == $clientName ? 'selected' : '' }}>
-                                    {{ $clientName }}
-                                </option>
-                                @php $clientNames[] = $clientName; @endphp
-                            @endif
+                        @php $clientName = $filter->client->short_name; @endphp
+                        @if (!in_array($clientName, $clientNames))
+                        <option value="{{ $clientName }}" {{ request('client_name') == $clientName ? 'selected' : '' }}>
+                            {{ $clientName }}
+                        </option>
+                        @php $clientNames[] = $clientName; @endphp
+                        @endif
                         @endforeach
                     </select>&nbsp;
 
                     <select name="project_title" class="form-select form-control-sm">
                         <option selected disabled>Select Project</option>
                         @foreach($filters as $filter)
-                            <option value="{{ $filter->title }}" {{ request('project_title') == $filter->title ? 'selected' : '' }}>
-                                {{ $filter->title }}
-                            </option>
+                        <option value="{{ $filter->title }}" {{ request('project_title') == $filter->title ? 'selected' : '' }}>
+                            {{ $filter->title }}
+                        </option>
                         @endforeach
                     </select>&nbsp;
 
@@ -38,11 +106,10 @@
     </div>
 </div>
 
-
 <div class="row">
     @foreach ($projects as $project)
-    <div class="col-md-4">
-        <div class="card my-3 p-3 shadow" style="height:400px;overflow-y:auto;">
+    <div class="col-lg-5 col-xl-4">
+        <div class="card my-3 p-3 shadow" style="height:250px;">
             <div class="d-flex justify-content-between">
                 <div style="width: 70%;">
                     <h6 style="font-weight:bold">Ref #: <span style="text-decoration: underline;">{{$project->project_ref}}</span> - <span style="text-decoration: underline;">{{$project->title}}</span></h6>
@@ -54,14 +121,33 @@
                     @endif
                 </p>
             </div>
+
+            @php
+            $locations = $project->projectLocations;
+            $firstLocation = $locations->first(); // Get the first location
+            $remainingLocations = $locations->slice(1); // Get the rest of the locations
+            @endphp
+
             <div class="mb-2">
                 <span class="mx-2">Locations : </span>
-                <div class="d-flex flex-wrap">
-                    @foreach ($project->projectLocations as $loc)
-                    <p class="badge bg-secondary p-2 m-1">{{$loc->state}} , {{$loc->district}} , {{$loc->block}}</p>
-                    @endforeach
-                </div>
+                @if ($firstLocation)
+                <span class="badge bg-secondary p-2 m-1 @if(count($remainingLocations) > 0) tooltip1 @endif" title="">
+                    {{ "{$firstLocation->state}, {$firstLocation->district}, {$firstLocation->block}" }}
+
+                    @if (count($remainingLocations) > 0)
+                        <span class="tooltip1text">
+                            <ul>
+                                @foreach ($remainingLocations as $loc)
+                                <li>{{ "{$loc->state}, {$loc->district}, {$loc->block}" }}</li>
+                                @endforeach
+                            </ul>
+                        </span>
+                    @endif
+
+                </span>
+                @endif
             </div>
+
             <div class="d-flex">
                 <p style="font-size:15px">Last Date : {{\Carbon\Carbon::parse($project->expiry_date)->format('d-m-Y')}}</p>
             </div>
@@ -161,14 +247,3 @@
 
 
 @endsection
-
-<!-- @section('script')
-<script>
-    $(document).ready(function() {
-        $('#project_title').change(function() {
-            $('#projectForm').submit();
-        });
-    });
-</script>
-
-@endsection -->

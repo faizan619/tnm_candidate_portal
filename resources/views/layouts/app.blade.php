@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="{{asset('css/style.css')}}">
-
+    @yield('style')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
