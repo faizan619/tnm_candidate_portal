@@ -116,6 +116,7 @@
             </div>
         </main>
         <footer class="p-4 text-center">
+            <p>For Any Inquery Mail At : <a href="mailto:jobs.hr@tnmhr.com">jobs.hr@tnmhr.com</a></p><hr>
             <p class="mb-0">Copy Right &copy; 2024, All rights reserved by <a href="tnmhr.com" class="text-danger" style="text-decoration: none;">tnmhr.com</a></p>
         </footer>
     </div>
