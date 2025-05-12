@@ -354,9 +354,9 @@ class ContractualController extends Controller
         $project = Project::find($requirement->project_id);
         $projectRef = $project->project_ref;
         if($applicationPersonal->save()){
-            $applicationPersonal->app_ref = "{$projectRef}_{$requirementId}_{$applicationPersonal->id}";
+            $applicationPersonal->app_ref = "{$projectRef}{$requirementId}{$applicationPersonal->id}";
             $applicationPersonal->save();
-            $folderPath = "{$projectRef}/{$projectRef}_{$requirementId}/{$projectRef}_{$requirementId}_{$applicationPersonal->id}";
+            $folderPath = "{$projectRef}/{$projectRef}{$requirementId}/{$projectRef}{$requirementId}{$applicationPersonal->id}";
             if (!Storage::disk('public')->exists($folderPath)) {
                 Storage::disk('public')->makeDirectory($folderPath);
             }
@@ -608,12 +608,20 @@ public function application_upload_store(Request $request)
 
             
             $data = ApplicationPersonal::find($applicationId);
+
+            $requirement = Requirement::find($requirementId);
+            $project = Project::find($requirement->project_id);
+            $projectRef1 = $project->project_ref;
+            $requirementId1 = $requirement->id;
+            $appId1 = $data->id;
+
             $appRef =  $data->app_ref;
             $originalName = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
-            $newFileName = $documentType . '_' . $appRef . '.' . $extension;
+            $newFileName = $documentType . '' . $appRef . '.' . $extension;
+            $customFolder = "{$projectRef1}/{$projectRef1}{$requirementId1}/{$projectRef1}{$requirementId1}{$appId1}/$documentType";
             
-            $filePath = $file->storeAs('documents', $newFileName, 'public');            
+            $filePath = $file->storeAs($customFolder, $newFileName, 'public');            
             // return $filePath;
             // Store new document
             // $filePath = $file->store('documents', 'public');
@@ -648,14 +656,22 @@ public function application_upload_store(Request $request)
 
         
         $data = ApplicationPersonal::find($applicationId);
+        
+            $requirement = Requirement::find($requirementId);
+            $project = Project::find($requirement->project_id);
+            $projectRef1 = $project->project_ref;
+            $requirementId1 = $requirement->id;
+            $appId1 = $data->id;
+
         $appRef =  $data->app_ref;
         $originalName = $request->file('upload.age_proof')->getClientOriginalName();
         $extension = $request->file('upload.age_proof')->getClientOriginalExtension();
-        $newFileName = 'Age_Proof_' . $appRef . '.' . $extension;
+        $newFileName = 'Age_Proof' . $appRef . '.' . $extension;
+        $customFolder = "{$projectRef1}/{$projectRef1}{$requirementId1}/{$projectRef1}{$requirementId1}{$appId1}/age_proof";
         // return $newFileName;
 
         // Store the file with the new filename
-        $filePath = $request->file('upload.age_proof')->storeAs('documents', $newFileName, 'public');
+        $filePath = $request->file('upload.age_proof')->storeAs($customFolder, $newFileName, 'public');
         // $photoPath = $request->file('photo')->store('photos', 'public');
 
 
@@ -691,14 +707,22 @@ public function application_upload_store(Request $request)
 
         
         $data = ApplicationPersonal::find($applicationId);
+    
+            $requirement = Requirement::find($requirementId);
+            $project = Project::find($requirement->project_id);
+            $projectRef1 = $project->project_ref;
+            $requirementId1 = $requirement->id;
+            $appId1 = $data->id;
+
         $appRef =  $data->app_ref;
         $originalName = $request->file('upload.disability_certificate')->getClientOriginalName();
         $extension = $request->file('upload.disability_certificate')->getClientOriginalExtension();
-        $newFileName = 'Disability_Certificate_' . $appRef . '.' . $extension;
+        $newFileName = 'Disability_Certificate' . $appRef . '.' . $extension;
+        $customFolder = "{$projectRef1}/{$projectRef1}{$requirementId1}/{$projectRef1}{$requirementId1}{$appId1}/disability_certificate";
         // return $newFileName;
 
         // Store the file with the new filename
-        $filePath = $request->file('upload.disability_certificate')->storeAs('documents', $newFileName, 'public');
+        $filePath = $request->file('upload.disability_certificate')->storeAs($customFolder, $newFileName, 'public');
         // $photoPath = $request->file('photo')->store('photos', 'public');
 
 
@@ -732,14 +756,22 @@ public function application_upload_store(Request $request)
         $existingCandidateDocuments->each->delete();
 
         $data = ApplicationPersonal::find($applicationId);
+        
+            $requirement = Requirement::find($requirementId);
+            $project = Project::find($requirement->project_id);
+            $projectRef1 = $project->project_ref;
+            $requirementId1 = $requirement->id;
+            $appId1 = $data->id;
+
         $appRef =  $data->app_ref;
         $originalName = $request->file('photo')->getClientOriginalName();
         $extension = $request->file('photo')->getClientOriginalExtension();
-        $newFileName = 'photo_' . $appRef . '.' . $extension;
+        $newFileName = 'photo' . $appRef . '.' . $extension;
+        $customFolder = "{$projectRef1}/{$projectRef1}{$requirementId1}/{$projectRef1}{$requirementId1}{$appId1}/photo";
         // return $newFileName;
 
         // Store the file with the new filename
-        $photoPath = $request->file('photo')->storeAs('photos', $newFileName, 'public');
+        $photoPath = $request->file('photo')->storeAs($customFolder, $newFileName, 'public');
         // $photoPath = $request->file('photo')->store('photos', 'public');
 
         ApplicationDocument::create([
@@ -771,14 +803,22 @@ public function application_upload_store(Request $request)
 
         
         $data = ApplicationPersonal::find($applicationId);
+        
+            $requirement = Requirement::find($requirementId);
+            $project = Project::find($requirement->project_id);
+            $projectRef1 = $project->project_ref;
+            $requirementId1 = $requirement->id;
+            $appId1 = $data->id;
+
         $appRef =  $data->app_ref;
         $originalName = $request->file('signature')->getClientOriginalName();
         $extension = $request->file('signature')->getClientOriginalExtension();
-        $newFileName = 'signature_' . $appRef . '.' . $extension;
+        $newFileName = 'signature' . $appRef . '.' . $extension;
+        $customFolder = "{$projectRef1}/{$projectRef1}{$requirementId1}/{$projectRef1}{$requirementId1}{$appId1}/signature";
         // return $newFileName;
 
         // Store the file with the new filename
-        $signaturePath = $request->file('signature')->storeAs('signatures', $newFileName, 'public');
+        $signaturePath = $request->file('signature')->storeAs($customFolder, $newFileName, 'public');
         // $photoPath = $request->file('photo')->store('photos', 'public');
 
         // $signaturePath = $request->file('signature')->store('signatures', 'public');
@@ -812,14 +852,22 @@ public function application_upload_store(Request $request)
 
         
         $data = ApplicationPersonal::find($applicationId);
+        
+            $requirement = Requirement::find($requirementId);
+            $project = Project::find($requirement->project_id);
+            $projectRef1 = $project->project_ref;
+            $requirementId1 = $requirement->id;
+            $appId1 = $data->id;
+
         $appRef =  $data->app_ref;
         $originalName = $request->file('cv_upload')->getClientOriginalName();
         $extension = $request->file('cv_upload')->getClientOriginalExtension();
-        $newFileName = 'cv_' . $appRef . '.' . $extension;
+        $newFileName = 'cv' . $appRef . '.' . $extension;
+        $customFolder = "{$projectRef1}/{$projectRef1}{$requirementId1}/{$projectRef1}{$requirementId1}{$appId1}/cv";
         // return $newFileName;
 
         // Store the file with the new filename
-        $cvPath = $request->file('cv_upload')->storeAs('cv', $newFileName, 'public');
+        $cvPath = $request->file('cv_upload')->storeAs($customFolder, $newFileName, 'public');
         // $photoPath = $request->file('photo')->store('photos', 'public');
 
         // Store new CV
