@@ -274,7 +274,7 @@
                             <tr>
                                 <th>Position</th>
                                 <th>Location</th>
-                                <!-- <th>Start Date</th> -->
+                                <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -285,8 +285,8 @@
                             @foreach($project->requirements as $requirement)
                             <tr>
                                 <td>{{$requirement['position']}}</td>
-                                <td>{{$requirement['locations']}}</td>
-                                <!-- <td>{{\Carbon\Carbon::parse($requirement['start_date_time'])->format('d-m-Y')}}</td> -->
+                                <td>{{ implode(', ', json_decode($requirement['locations'], true)) }}</td>
+                                <td>{{\Carbon\Carbon::parse($requirement['start_date_time'])->format('d-m-Y')}}</td>
                                 <td>{{\Carbon\Carbon::parse($requirement['expiry_date_time'])->format('d-m-Y')}}</td>
                                 <td>@if($requirement['status']==1) Active @else Close @endif</td>
                                 <td><a class="btn btn-sm btn-danger" href="{{ url('/contractuals/requirements', [$requirement['id'], $requirement['position']]) }}" class="mb-1">Apply</a></td>
