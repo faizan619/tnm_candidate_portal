@@ -565,13 +565,13 @@ class ContractualController extends Controller
         $mailid = $project->support_mail_id;
 
         $requirements=Requirement::select('id','document_uploaded','age_proof_mandatory')->find($application->requirement_id);
-        
+        $projectDocs = ProjectDocument::where('project_id',$project->id)->get();
         $documentUpload= explode(',', $requirements->document_uploaded);
         $candidateUser=CandidateUser::select('id','photo','signature')->findOrFail(Auth::User()->id);
         $oneYearAgo = Carbon::now()->subYear();
         $applicationDocuments=ApplicationDocument::where('application_id',$application_id)->get();
         
-        return view('contractuals.application.documents_upload', compact('application','mailid','documentUpload','candidateUser','oneYearAgo','requirements','applicationDocuments'));
+        return view('contractuals.application.documents_upload', compact('application','mailid','documentUpload','projectDocs','candidateUser','oneYearAgo','requirements','applicationDocuments'));
     }
 
     

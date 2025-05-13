@@ -54,14 +54,41 @@
                         <div class="text-center text-muted mb-2">----: Document Uploads :----</div>
                         
                         <div class="row bg-grey p-2 rounded">
-                            @foreach($documentUpload as $index => $upload)
+                            <!-- @foreach($documentUpload as $index => $upload)
                             <div class="col-md-4 mb-2">
                                 <label>{{ $upload }} <span class="text-danger">*</span></label>
                                 <input type="file" name="upload[{{ $index }}]" class="form-control" required data-parsley-filemimetypes="application/pdf,image/jpeg" data-parsley-trigger="change" data-parsley-errors-container="#error-file-{{ $index }}">
                                 <input type="hidden" name="document_type[{{ $index }}]" value="{{ $upload }}">
                                 <div id="error-file-{{ $index }}"></div>
                             </div>
+                            @endforeach -->
+                            @foreach($projectDocs as $index => $doc)
+                                @php
+                                    $isRequired = in_array($doc->document_name, $documentUpload);
+                                    $fieldName = "upload[{$index}]";
+                                    $fieldType = "document_type[{$index}]";
+                                    $docLabel = $doc->document_name . ($isRequired ? ' <span class="text-danger">*</span>' : '');
+                                    $acceptedTypes = 'application/pdf,image/jpeg';
+                                    $sizeInfo = $doc->file_size . ' ' . $doc->size_type;
+                                @endphp
+
+                                <div class="col-md-4 mb-2">
+                                    <label>{!! $docLabel !!}</label>
+                                    <input type="file"
+                                        name="{{ $fieldName }}"
+                                        class="form-control"
+                                        {{ $isRequired ? 'required' : '' }}
+                                        data-parsley-filemimetypes="{{ $acceptedTypes }}"
+                                        data-parsley-trigger="change"
+                                        data-parsley-errors-container="#error-file-{{ $index }}"
+                                    >
+                                    <input type="hidden" name="{{ $fieldType }}" value="{{ $doc->document_name }}">
+                                    <small class="text-muted">Max Size: {{ $sizeInfo }}</small>
+                                    <div id="error-file-{{ $index }}"></div>
+                                </div>
                             @endforeach
+
+
 
                             @if($requirements->age_proof_mandatory=='Yes')
                             <div class="col-md-4 mb-2">
