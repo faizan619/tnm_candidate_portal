@@ -23,7 +23,80 @@ use Carbon\Carbon;
 class RegisterController extends Controller
 {
     // Show the registration form
-    public function showRegistrationForm()
+
+    public function showRegistrationForm(){
+        
+        return view('auth.register1');
+    }
+
+    public function showregistrationverification(Request $request){
+        // return $request;
+        $request->validate([
+            'email' => 'required|string|email|max:255|unique:mysql.candidate_users',
+            'mobile' => 'required|string|max:10|unique:mysql.candidate_users',
+            'captcha' => 'required|captcha',
+        ],
+        [
+            'captcha.captcha' => 'The CAPTCHA is incorrect. Please try again.'
+        ]);
+        
+		$emailOtp = rand(100000, 999999);
+        $mobileOtp = rand(100000, 999999);
+		 
+		// Save OTP to session
+		session([
+			'email' => $request->email,
+			'mobile' => $request->mobile,
+			'email_otp' => $emailOtp,
+			'sms_otp' => $mobileOtp,
+			// 'user_id' => $user->id,
+		]);
+		 
+		
+        
+        // Send OTP via email and SMS
+        EmailHelper::setMailConfig();
+        $emailTemplate = Template::where('type', 'Email')
+            ->where('name', 'OTP Email')
+            ->where('status', 1)
+            ->first();
+        if ($emailTemplate) {
+            $emailMessage = $emailTemplate->description;
+            $emailMessage = str_replace('[name]', "Candidate", $emailMessage);
+            $emailMessage = str_replace('[otp]', $emailOtp, $emailMessage);
+
+            $email = $request->email;
+            Mail::html($emailMessage, function ($msg) use ($email) {
+                $msg->to($email)->subject('Verify email via OTP with TNMHR.');
+            });
+        }
+
+        
+        // Below code is use for the sms purpose 
+
+          $smsTemplate = Template::where('type', 'SMS')
+             ->where('name', 'OTP SMS')
+             ->where('status', 1)
+             ->first();
+        
+        if ($smsTemplate) {
+			$smsMessage = strip_tags($smsTemplate->description);            
+			$smsMessage = str_replace('[otp]', $mobileOtp, $smsMessage);
+			$smsMessage = str_replace("&nbsp;", " ", $smsMessage); // Replace &nbsp; with space
+			$smsMessage = html_entity_decode($smsMessage, ENT_QUOTES, 'UTF-8'); // Decode HTML entities
+			$smsMessage = trim(preg_replace('/\s+/', ' ', $smsMessage));
+			
+			SMSHelper::setSMSConfig($request->mobile, $smsMessage);
+			
+		}
+        
+        
+        return redirect()->route('verifyOtpForm')->with(
+			'success', 'OTP sent to your Email .',
+		);
+    }
+
+    public function showRegistrationForm0()
     {
         $genders=LookupValue::where('type_id',3)->get();
         $industries=LookupValue::where('type_id',4)->get();
@@ -112,6 +185,8 @@ class RegisterController extends Controller
         $user->expected_ctc = $request->expected_ctc;
         $user->tags = $request->tags;
         $user->portal_ref = $request->portal_ref;
+        $user->email_verified_at = now();
+        $user->mobile_verified_at = now();
 		
          $user->save();
 
@@ -197,60 +272,61 @@ class RegisterController extends Controller
         }
 		 
         
-		$emailOtp = rand(100000, 999999);
-        $mobileOtp = rand(100000, 999999);
+		// $emailOtp = rand(100000, 999999);
+        // $mobileOtp = rand(100000, 999999);
 		 
-		// Save OTP to session
-		session([
-			'email' => $request->email,
-			'mobile' => $request->mobile,
-			'email_otp' => $emailOtp,
-			'sms_otp' => $mobileOtp,
-			'user_id' => $user->id,
-		]);
+		// // Save OTP to session
+		// session([
+		// 	'email' => $request->email,
+		// 	'mobile' => $request->mobile,
+		// 	'email_otp' => $emailOtp,
+		// 	'sms_otp' => $mobileOtp,
+		// 	'user_id' => $user->id,
+		// ]);
 		 
 		
         
-        // Send OTP via email and SMS
-        EmailHelper::setMailConfig();
-        $emailTemplate = Template::where('type', 'Email')
-            ->where('name', 'OTP Email')
-            ->where('status', 1)
-            ->first();
-        if ($emailTemplate) {
-            $emailMessage = $emailTemplate->description;
-            $emailMessage = str_replace('[name]', $user->name, $emailMessage);
-            $emailMessage = str_replace('[otp]', $emailOtp, $emailMessage);
+        // // Send OTP via email and SMS
+        // EmailHelper::setMailConfig();
+        // $emailTemplate = Template::where('type', 'Email')
+        //     ->where('name', 'OTP Email')
+        //     ->where('status', 1)
+        //     ->first();
+        // if ($emailTemplate) {
+        //     $emailMessage = $emailTemplate->description;
+        //     $emailMessage = str_replace('[name]', $user->name, $emailMessage);
+        //     $emailMessage = str_replace('[otp]', $emailOtp, $emailMessage);
 
-            $email = $request->email;
-            Mail::html($emailMessage, function ($msg) use ($email) {
-                $msg->to($email)->subject('Verify email via OTP with TNMHR.');
-            });
-        }
+        //     $email = $request->email;
+        //     Mail::html($emailMessage, function ($msg) use ($email) {
+        //         $msg->to($email)->subject('Verify email via OTP with TNMHR.');
+        //     });
+        // }
 
         
-        // Below code is use for the sms purpose 
+        // // Below code is use for the sms purpose 
 
-          $smsTemplate = Template::where('type', 'SMS')
-             ->where('name', 'OTP SMS')
-             ->where('status', 1)
-             ->first();
+        //   $smsTemplate = Template::where('type', 'SMS')
+        //      ->where('name', 'OTP SMS')
+        //      ->where('status', 1)
+        //      ->first();
         
-        if ($smsTemplate) {
-			$smsMessage = strip_tags($smsTemplate->description);            
-			$smsMessage = str_replace('[otp]', $mobileOtp, $smsMessage);
-			$smsMessage = str_replace("&nbsp;", " ", $smsMessage); // Replace &nbsp; with space
-			$smsMessage = html_entity_decode($smsMessage, ENT_QUOTES, 'UTF-8'); // Decode HTML entities
-			$smsMessage = trim(preg_replace('/\s+/', ' ', $smsMessage));
+        // if ($smsTemplate) {
+		// 	$smsMessage = strip_tags($smsTemplate->description);            
+		// 	$smsMessage = str_replace('[otp]', $mobileOtp, $smsMessage);
+		// 	$smsMessage = str_replace("&nbsp;", " ", $smsMessage); // Replace &nbsp; with space
+		// 	$smsMessage = html_entity_decode($smsMessage, ENT_QUOTES, 'UTF-8'); // Decode HTML entities
+		// 	$smsMessage = trim(preg_replace('/\s+/', ' ', $smsMessage));
 			
-			SMSHelper::setSMSConfig($request->mobile, $smsMessage);
+		// 	SMSHelper::setSMSConfig($request->mobile, $smsMessage);
 			
-		}
+		// }
         
         
-        return redirect()->route('verifyOtpForm')->with(
-			'success', 'OTP sent to your Email .',
-		);
+        // return redirect()->route('verifyOtpForm')->with(
+		// 	'success', 'OTP sent to your Email .',
+		// );
+        return redirect()->route('login')->with('success', 'Registration Done Successfully!');
     }
 
     public function showVerifyOtpForm()
@@ -269,18 +345,18 @@ class RegisterController extends Controller
 
         $emailOtp = session('email_otp');
         $smsOtp = session('sms_otp');
-        $userId = session('user_id');
+        // $userId = session('user_id');
         $email = session('email');
     	$mobile = session('mobile');
         
-        $user = CandidateUser::findOrFail($userId);
+        // $user = CandidateUser::findOrFail($userId);
         
        if ($request->email_otp == $emailOtp) {
-        $user->email_verified_at = now();
-        $user->mobile_verified_at = now();
-		$user->email = $email;
-        $user->mobile = $mobile;
-        $user->save();
+        // $user->email_verified_at = now();
+        // $user->mobile_verified_at = now();
+		// $user->email = $email;
+        // $user->mobile = $mobile;
+        // $user->save();
 		   
 		   
         
@@ -293,10 +369,12 @@ class RegisterController extends Controller
 		
         if ($emailTemplate) {
             $emailMessage = $emailTemplate->description;
-            $emailMessage = str_replace('[name]', $user->name, $emailMessage);
-            $emailMessage = str_replace('[regno]', $user->id, $emailMessage);
+            // $emailMessage = str_replace('[name]', $user->name, $emailMessage);
+            $emailMessage = str_replace('[name]', "Candidate ", $emailMessage);
+            // $emailMessage = str_replace('[regno]', $user->id, $emailMessage);
 			
-            $email = $user->email;
+            // $email = $user->email;
+
             Mail::html($emailMessage, function ($msg) use ($email) {
                 $msg->to($email)->subject('You are successfully register with TNMHR.');
             });
@@ -304,7 +382,8 @@ class RegisterController extends Controller
 
 
         
-        
+        if($request->sms_otp == $smsOtp){
+
         // below code is use to sent the sms opt 
         
           $smsTemplate = Template::where('type', 'SMS')
@@ -313,16 +392,26 @@ class RegisterController extends Controller
              ->first();
          if ($smsTemplate) {
              $smsMessage = strip_tags($smsTemplate->description);    
-             $smsMessage = str_replace('[regno]', $user->id, $smsMessage);
-             SMSHelper::setSMSConfig($user->mobile, $smsMessage);
+            //  $smsMessage = str_replace('[regno]', $user->id, $smsMessage);
+             $smsMessage = str_replace('[regno]', "Candidate :", $smsMessage);
+            //  SMSHelper::setSMSConfig($user->mobile, $smsMessage);
+             SMSHelper::setSMSConfig($mobile, $smsMessage);
          }
+
+         return redirect()->route('register0')->with('success','OTP verified Successfully');
+
+        }
+        else{
+            return redirect()->back()->withErrors(['otp' => 'Invalid. SMS OTPs must be correct.']);
+        }
 		
         // Clear the OTPs from session if both are verified
-            session()->forget(['email', 'mobile', 'email_otp', 'sms_otp', 'user_id']);
+            // session()->forget(['email', 'mobile', 'email_otp', 'sms_otp', 'user_id']);
 
-            return redirect()->route('login')->with('success', 'OTP verified successfully!');
+            // return redirect()->route('login')->with('success', 'OTP verified successfully!');
+            // return redirect()->route('register0')->with('success','OTP verified Successfully');
         } else {
-            return redirect()->back()->withErrors(['otp' => 'Invalid. OTPs must be correct.']);
+            return redirect()->back()->withErrors(['otp' => 'Invalid. Email OTPs must be correct.']);
         }
 		
     }
@@ -336,9 +425,9 @@ class RegisterController extends Controller
         $mobileOtp = rand(100000, 999999);
 		$email = session('email');
     	$mobile = session('mobile');
-		$userId = session('user_id');
+		// $userId = session('user_id');
         
-		$user = CandidateUser::findOrFail($userId);
+		// $user = CandidateUser::findOrFail($userId);
 		
         // Send OTP via email
         EmailHelper::setMailConfig();
@@ -348,14 +437,15 @@ class RegisterController extends Controller
             ->first();
         if ($emailTemplate) {
             $emailMessage = $emailTemplate->description;
-            $emailMessage = str_replace('[name]', $user->name, $emailMessage);
+            // $emailMessage = str_replace('[name]', $user->name, $emailMessage);
+            $emailMessage = str_replace('[name]', "Candidate ", $emailMessage);
             $emailMessage = str_replace('[otp]', $emailOtp, $emailMessage);
 			
-			/*
+			
             Mail::html($emailMessage, function ($msg) use ($email) {
                 $msg->to($email)->subject('Verify email via OTP with TNMHR.');
             });
-			*/
+            
         }
 
         // Send OTP via SMS

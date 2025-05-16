@@ -62,13 +62,13 @@
                     <div class="row mb-2">
                        <div class="col-md-6">
                         <label>Email Address <span class="text-danger">*</span></label>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" data-parsley-remote="{{ route('validate.email') }}" data-parsley-remote-validator='custom' data-parsley-remote-message="Email already exists">
+                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" readonly value="{{ session('email') }}" required autocomplete="email" data-parsley-remote="{{ route('validate.email') }}" data-parsley-remote-validator='custom' data-parsley-remote-message="Email already exists">
 
                     </div>
 
                     <div class="col-md-6">
                         <label>Mobile Number <span class="text-danger">*</span></label>
-                        <input id="mobile" type="text" class="form-control @error('mobile') is-invalid @enderror" name="mobile" value="{{ old('mobile') }}" required autocomplete="mobile" data-parsley-pattern="^[789]\d{9}$" data-parsley-remote="{{ route('validate.mobile') }}" data-parsley-remote-validator='custom' data-parsley-remote-message="Mobile number already exists">
+                        <input id="mobile" type="text" class="form-control @error('mobile') is-invalid @enderror" name="mobile" readonly value="{{ session('mobile') }}" required autocomplete="mobile" data-parsley-pattern="^[789]\d{9}$" data-parsley-remote="{{ route('validate.mobile') }}" data-parsley-remote-validator='custom' data-parsley-remote-message="Mobile number already exists">
 
                     </div>
                 </div>
