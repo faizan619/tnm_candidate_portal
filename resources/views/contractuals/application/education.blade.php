@@ -178,9 +178,13 @@
                             <label>Course</label>
                             <input type="text" name="course[]" class="form-control" value="{{ $certification->course }}">
                         </div>
-                        <div class="col-md-4 mb-2">
+                        <div class="col-md-2 mb-2">
                             <label>Subject</label>
                             <input type="text" name="subject[]" class="form-control" value="{{ $certification->subject }}">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label>Expire Date</label>
+                            <input type="date" name="expire[]" class="form-control" value="{{ $certification->expire }}">
                         </div>
                         <div class="col-md-2 mb-2">
                             <label>Percentage %</label>
@@ -250,10 +254,14 @@
                         <label>Course</label>
                         <input type="text" name="course[]" class="form-control">
                     </div>
-                    <div class="col-md-4 mb-2">
+                    <div class="col-md-2 mb-2">
                         <label>Subject</label>
                         <input type="text" name="subject[]" class="form-control">
                     </div>
+                     <div class="col-md-2 mb-2">
+                            <label>Expire Date</label>
+                            <input type="date" name="expire[]" class="form-control" value="{{ $certification->expire }}">
+                        </div>
                     <div class="col-md-4 mb-2">
                         <label>Percentage %</label>
                         <input type="text" name="percentage[]" class="form-control">

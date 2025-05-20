@@ -338,7 +338,7 @@
 
                             <div class="col-md-6 mb-2">
                                 <label>Email Address <span class="text-danger">*</span></label>
-                                <input id="email" type="email" class="form-control readonly @error('email') is-invalid @enderror" name="email" value="{{$candidate_user->email }}" required readonly maxlength="30">
+                                <input id="email" type="email" class="form-control readonly @error('email') is-invalid @enderror" name="email" value="{{$candidate_user->email }}" required readonly maxlength="60">
 
                             </div>
 

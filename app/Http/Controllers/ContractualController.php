@@ -435,6 +435,7 @@ class ContractualController extends Controller
             if ($certificationRecord) {
                 // Update existing record
                 $certificationRecord->update([
+                    'expire' => $request['expire'][$key],
                     'subject' => $request['subject'][$key],
                     'percentage' => $request['percentage'][$key],
                     'passing_year' => $request['cer_passing_year'][$key],
@@ -447,6 +448,7 @@ class ContractualController extends Controller
                 ApplicationCertification::create([
                     'application_id' => $request['application_id'],
                     'certification_number' => $request['certification_number'][$key],
+                    'expire' => $request['expire'][$key],
                     'course' => $request['course'][$key],
                     'subject' => $request['subject'][$key],
                     'percentage' => $request['percentage'][$key],
