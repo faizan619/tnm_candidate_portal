@@ -155,7 +155,7 @@
                             <div class="col-md-2">
                                 <label>Total Experience</label>
                                 <div class="input-group mb-3">
-                                    <input type="text" id="total_experience" name="total_experience" class="form-control text-danger" disabled value="0">
+                                    <input type="text" id="total_experience" name="total_experience" class="form-control text-danger" readonly value="0">
                                     <span class="input-group-text text-muted" id="basic-addon2">Years</span>
                                 </div>
                             </div>
