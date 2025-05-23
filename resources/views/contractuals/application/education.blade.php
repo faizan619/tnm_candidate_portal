@@ -260,7 +260,7 @@
                     </div>
                      <div class="col-md-2 mb-2">
                             <label>Expire Date</label>
-                            <input type="date" name="expire[]" class="form-control" value="{{ $certification->expire }}">
+                            <input type="date" name="expire[]" class="form-control">
                         </div>
                     <div class="col-md-4 mb-2">
                         <label>Percentage %</label>
