@@ -51,7 +51,8 @@ Route::get('/validate-mobile', [RegisterController::class,'validateMobile'])->na
 
 Route::post('/register', [RegisterController::class, 'store'])->name('register');
 Route::get('/verify-otp', [RegisterController::class, 'showVerifyOtpForm'])->name('verifyOtpForm');
-Route::post('/verified-otp', [RegisterController::class, 'verifyOtp'])->name('verifyOtp');
+// Route::post('/verified-otp', [RegisterController::class, 'verifyOtp'])->name('verifyOtp');
+Route::match(['get', 'post'], '/verified-otp', [RegisterController::class, 'verifyOtp'])->name('verifyOtp');
 Route::get('/resend-otp', [RegisterController::class, 'resendOtp'])->name('resendOtp');
 
 Route::post('/verification',[RegisterController::class,'showregistrationverification'])->name('showregistrationverification');

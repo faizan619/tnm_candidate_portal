@@ -336,6 +336,10 @@ class RegisterController extends Controller
 
     public function verifyOtp(Request $request)
     {
+
+        if ($request->isMethod('get')) {
+            return redirect()->route('register')->with('error', 'Network issue. Please Try Again');
+        }
         
         $request->validate([
             'email_otp' => 'nullable|numeric',
