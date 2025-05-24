@@ -243,12 +243,7 @@
                         <label for="certification_number">Certification Number:</label>
                         <input type="text" class="form-control" name="certification_number[]" id="certification_number" value="{{ old('certification_number.0') }}">
                     </div>
-                    <!-- @foreach(old('certification_number', []) as $index => $value)
-                        <div class="col-md-4 mb-2">
-                            <label for="certification_number_{{ $index }}">Certification Number {{ $index + 1 }}:</label>
-                            <input type="text" class="form-control" name="certification_number[]" id="certification_number_{{ $index }}" value="{{ $value }}">
-                        </div>
-                    @endforeach -->
+                   
 
                     <div class="col-md-4 mb-2">
                         <label>Course</label>
