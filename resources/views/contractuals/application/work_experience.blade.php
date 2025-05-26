@@ -76,11 +76,11 @@
                                             <label for="company">Company <span class="text-danger">*</span></label>
                                             <input type="text" name="company[]" class="form-control" value="{{ $experience->company }}" required maxlength="20">
                                         </div>
-                                        <div class="col-md-4 mb-2">
+                                        <div class="col-md-6 mb-2">
                                             <label for="designation">Designation <span class="text-danger">*</span></label>
                                             <input type="text" name="designation[]" class="form-control" value="{{ $experience->designation }}" maxlength="20" required>
                                         </div>
-                                        <div class="col-md-4 mb-2">
+                                        <div class="col-md-6 mb-2">
                                             <label for="work_type">Work Type <span class="text-danger">*</span></label>
                                             <select name="work_type[]" class="form-control" required>
                                                 <option disabled selected>Select work type</option>
@@ -89,12 +89,16 @@
                                                 <option value="Work From Home" {{ $experience->work_type == 'Work From Home' ? 'selected' : '' }}>Work From Home</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-4 mb-2">
+                                        <div class="col-md-6 mb-2">
                                             <label for="ctc">CTC <span class="text-danger">*</span></label>
                                             <input type="number" name="ctc[]" class="form-control" value="{{ $experience->ctc }}" required>
                                         </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label for="expctc">Expected CTC</label>
+                                            <input type="number" name="expctc[]" id="expctc" class="form-control" value="{{ $experience->expctc }}" required>
+                                        </div>
                                         <div class="col-md-12 mb-2">
-                                            <label for="ctc">Responsibilities</label>
+                                            <label for="responsibilities">Responsibilities</label>
                                             <textarea name="responsibilities[]" class="form-control">{{ $experience->responsibilities }}</textarea>
                                         </div>
                                     </div>
@@ -121,11 +125,11 @@
                                             <label for="company">Company <span class="text-danger">*</span></label>
                                             <input type="text" name="company[]" class="form-control" required maxlength="20">
                                         </div>
-                                        <div class="col-md-4 mb-2">
+                                        <div class="col-md-6 mb-2">
                                             <label for="designation">Designation <span class="text-danger">*</span></label>
                                             <input type="text" name="designation[]" class="form-control" required>
                                         </div>
-                                        <div class="col-md-4 mb-2">
+                                        <div class="col-md-6 mb-2">
                                             <label for="work_type">Work Type <span class="text-danger">*</span></label>
                                             <select name="work_type[]" class="form-control" required>
                                                 <option>Select work type</option>
@@ -134,12 +138,16 @@
                                                 <option>Work From Home</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-4 mb-2">
+                                        <div class="col-md-6 mb-2">
                                             <label for="ctc">CTC <span class="text-danger">*</span></label>
                                             <input type="number" name="ctc[]" class="form-control" required>
                                         </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label for="expctc">Expected CTC</label>
+                                            <input type="number" name="expctc[]" id="expctc" class="form-control" required>
+                                        </div>
                                         <div class="col-md-12 mb-2">
-                                            <label for="ctc">Responsibilities</label>
+                                            <label for="responsibilities">Responsibilities</label>
                                             <textarea name="responsibilities[]" class="form-control"></textarea>
                                         </div>
                                     </div>

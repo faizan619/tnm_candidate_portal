@@ -503,6 +503,7 @@ class ContractualController extends Controller
         $designationArray = $formData['designation'] ?? [];
         $workTypeArray = $formData['work_type'] ?? [];
         $ctcArray = $formData['ctc'] ?? [];
+        $expctcArray = $formData['expctc'] ?? [];
         $responsibilitiesArray = $formData['responsibilities'] ?? [];
 
         // Get existing records for the application
@@ -528,6 +529,7 @@ class ContractualController extends Controller
             $workExperience->designation = $designationArray[$key] ?? null;
             $workExperience->work_type = $workTypeArray[$key] ?? null;
             $workExperience->ctc = $ctcArray[$key] ?? null;
+            $workExperience->expctc = $expctcArray[$key] ?? null;
             $workExperience->responsibilities = $responsibilitiesArray[$key] ?? null;
 
             // Save the work experience entry
