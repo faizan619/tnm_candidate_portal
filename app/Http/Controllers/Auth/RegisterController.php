@@ -31,15 +31,37 @@ class RegisterController extends Controller
 
     public function showregistrationverification(Request $request){
         // return $request;
+        // $request->validate([
+        //     'email' => 'required|string|email|max:255|unique:mysql.candidate_users',
+        //     'mobile' => 'required|string|max:10|unique:mysql.candidate_users',
+        //     'captcha' => 'required|captcha',
+        // ],
+        // [
+        //     'captcha.captcha' => 'The CAPTCHA is incorrect. Please try again.'
+        // ]);
+        
         $request->validate([
-            'email' => 'required|string|email|max:255|unique:mysql.candidate_users',
-            'mobile' => 'required|string|max:10|unique:mysql.candidate_users',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                'unique:mysql.candidate_users,email'
+            ],
+            'mobile' => [
+                'required',
+                'string',
+                'regex:/^[6-9]\d{9}$/',
+                'unique:mysql.candidate_users,mobile'
+            ],
             'captcha' => 'required|captcha',
-        ],
-        [
+        ], [
+            'email.regex' => 'Please enter a valid email address.',
+            'mobile.regex' => 'Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.',
             'captcha.captcha' => 'The CAPTCHA is incorrect. Please try again.'
         ]);
-        
+
 		$emailOtp = rand(100000, 999999);
         $mobileOtp = rand(100000, 999999);
 		 
@@ -272,60 +294,6 @@ class RegisterController extends Controller
         }
 		 
         
-		// $emailOtp = rand(100000, 999999);
-        // $mobileOtp = rand(100000, 999999);
-		 
-		// // Save OTP to session
-		// session([
-		// 	'email' => $request->email,
-		// 	'mobile' => $request->mobile,
-		// 	'email_otp' => $emailOtp,
-		// 	'sms_otp' => $mobileOtp,
-		// 	'user_id' => $user->id,
-		// ]);
-		 
-		
-        
-        // // Send OTP via email and SMS
-        // EmailHelper::setMailConfig();
-        // $emailTemplate = Template::where('type', 'Email')
-        //     ->where('name', 'OTP Email')
-        //     ->where('status', 1)
-        //     ->first();
-        // if ($emailTemplate) {
-        //     $emailMessage = $emailTemplate->description;
-        //     $emailMessage = str_replace('[name]', $user->name, $emailMessage);
-        //     $emailMessage = str_replace('[otp]', $emailOtp, $emailMessage);
-
-        //     $email = $request->email;
-        //     Mail::html($emailMessage, function ($msg) use ($email) {
-        //         $msg->to($email)->subject('Verify email via OTP with TNMHR.');
-        //     });
-        // }
-
-        
-        // // Below code is use for the sms purpose 
-
-        //   $smsTemplate = Template::where('type', 'SMS')
-        //      ->where('name', 'OTP SMS')
-        //      ->where('status', 1)
-        //      ->first();
-        
-        // if ($smsTemplate) {
-		// 	$smsMessage = strip_tags($smsTemplate->description);            
-		// 	$smsMessage = str_replace('[otp]', $mobileOtp, $smsMessage);
-		// 	$smsMessage = str_replace("&nbsp;", " ", $smsMessage); // Replace &nbsp; with space
-		// 	$smsMessage = html_entity_decode($smsMessage, ENT_QUOTES, 'UTF-8'); // Decode HTML entities
-		// 	$smsMessage = trim(preg_replace('/\s+/', ' ', $smsMessage));
-			
-		// 	SMSHelper::setSMSConfig($request->mobile, $smsMessage);
-			
-		// }
-        
-        
-        // return redirect()->route('verifyOtpForm')->with(
-		// 	'success', 'OTP sent to your Email .',
-		// );
         return redirect()->route('login')->with('success', 'Registration Done Successfully!');
     }
 
@@ -356,15 +324,7 @@ class RegisterController extends Controller
         // $user = CandidateUser::findOrFail($userId);
         
        if ($request->email_otp == $emailOtp) {
-        // $user->email_verified_at = now();
-        // $user->mobile_verified_at = now();
-		// $user->email = $email;
-        // $user->mobile = $mobile;
-        // $user->save();
-		   
-		   
-        
-		
+       
          EmailHelper::setMailConfig();
         $emailTemplate = Template::where('type', 'Email')
             ->where('name', 'New Candidate Registration')
