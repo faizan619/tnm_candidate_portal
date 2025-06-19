@@ -150,6 +150,7 @@
                                 <div>
                                     @php
                                         $cvDocument = $applicationDocuments->where('document_type', 'cv')->first();
+                                        $regCv = $candidateDocuments->where('document_type','cv')->first();
                                     @endphp
 
                                     @if ($cvDocument)
@@ -157,7 +158,10 @@
                                             Download Your Last Updated CV <i class="fas fa-download ml-1"></i>
                                         </a>
                                     @else
-                                        <span>No CV uploaded</span>
+                                        <!-- <span>No CV uploaded</span> -->
+                                        <a href="{{ asset('storage/' . $regCv->file_path) }}" class="btn btn-danger btn-sm" download>
+                                            View CV <i class="fas fa-download ml-1"></i>
+                                        </a>
                                     @endif
                                 </div>
                                 <div>
