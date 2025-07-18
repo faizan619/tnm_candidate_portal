@@ -250,7 +250,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @if($project->project_notifications && $project->project_notifications->count())
+                    @if($project->projectNotifications && $project->projectNotifications->count())
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -260,7 +260,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($project->project_notifications->sortByDesc('date') as $notification)
+                            @foreach($project->projectNotifications->sortByDesc('date') as $notification)
                             <tr>
                                 <td>{{ \Carbon\Carbon::parse($notification->date)->format('d-m-Y') }}</td>
                                 <td>{{ $notification->title }}</td>
