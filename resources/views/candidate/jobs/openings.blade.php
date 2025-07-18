@@ -196,14 +196,14 @@
                                     <div style="max-height: 2rem;overflow:auto">
                                         <span class=""><i class="fa-solid fa-location-dot text-danger"></i>&nbsp;Locations : </span>
                                         @if ($firstLocation)
-                                            <span class="@if(count($remainingLocations) > 0) @endif" title="">
-                                                {{ "{$firstLocation->district}" }}
-                                                @if (count($remainingLocations) > 0)
-                                                    @foreach ($remainingLocations as $loc)
-                                                        <li style="display: inline;">, {{ "{$loc->district}" }}</li>
-                                                    @endforeach
-                                                @endif
-                                            </span>
+                                        <span class="@if(count($remainingLocations) > 0) @endif" title="">
+                                            {{ "{$firstLocation->district}" }}
+                                            @if (count($remainingLocations) > 0)
+                                            @foreach ($remainingLocations as $loc)
+                                            <li style="display: inline;">, {{ "{$loc->district}" }}</li>
+                                            @endforeach
+                                            @endif
+                                        </span>
                                         @endif
                                     </div>
 
@@ -212,13 +212,18 @@
                                 <div class="d-flex">
                                     <p style="font-size:15px"><i class="fa-solid fa-calendar-days text-danger"></i>&nbsp;Last Date : {{\Carbon\Carbon::parse($project->expiry_date)->format('d-m-Y')}}</p>
                                 </div>
-                                <div class="mt-auto">
-                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#positionModal{{ $project->id }}">View Position</button>
-                                    @if($project->description)
-                                    <button type="button" class="btn btn-link text-secondary" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ $project->id }}">
-                                        Read more
-                                    </button>
+                                <div class="mt-auto d-flex justify-content-between">
+                                    <div>
+                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#positionModal{{ $project->id }}">View Position</button>
+                                        @if($project->description)
+                                        <button type="button" class="btn btn-link text-secondary" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ $project->id }}">
+                                            Read more
+                                        </button>
+                                    </div>
                                     @endif
+                                    <div class="">
+                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#notificationModal{{$project->id}}"><i class="fas fa-bell"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -235,6 +240,56 @@
         <p class="mb-0">Copy Right &copy; 2024, All rights reserved by <a href="tnmhr.com" class="text-danger" style="text-decoration: none;">tnmhr.com</a></p>
     </footer>
 
+    @foreach($projects as $project)
+    @if($project)
+    <div class="modal fade" id="notificationModal{{ $project->id }}" tabindex="-1" aria-labelledby="notificationModalLabel{{ $project->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationModalLabel{{ $project->id }}">Project Notifications</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @if($project->project_notifications && $project->project_notifications->count())
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Document</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($project->project_notifications->sortByDesc('date') as $notification)
+                            <tr>
+                                <td>{{ \Carbon\Carbon::parse($notification->date)->format('d-m-Y') }}</td>
+                                <td>{{ $notification->title }}</td>
+                                <td>
+                                    @if($notification->document_upload)
+                                        {{-- <a href="{{ asset('storage/'.$notification->document_upload) }}" download class="btn btn-sm btn-primary"> --}}
+                                        <a href="{{ Storage::url($notification->document_upload) }}" download class="btn btn-sm btn-primary">
+                                            Download
+                                        </a>
+                                    @else
+                                        <span class="text-muted">No File</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    @else
+                    <p class="text-center text-muted">No notifications available.</p>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    @endforeach
 
     <!-- Modal for Project Description -->
     @foreach($projects as $project)

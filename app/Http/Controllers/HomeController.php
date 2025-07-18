@@ -44,7 +44,9 @@ class HomeController extends Controller
             'requirements' => function ($query) use ($currentDate) {
                 $query->where('website_publish_date', '<=', $currentDate)->where('status', 1);
             },
-            'projectNotifications'
+            'projectNotifications'=> function ($query) {
+                $query->orderBy('date', 'desc');
+            }
         ])
             ->where('status', 1)
             ->orderBy('start_date', 'desc')
