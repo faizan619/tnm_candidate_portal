@@ -222,7 +222,7 @@
                                     </div>
                                     @endif
                                     <div class="">
-                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#notificationModal{{$project->id}}"><i class="fas fa-bell"></i></button>
+                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#notificationModal{{$project->id}}"><i class="fas fa-bell"></i>    <span class="badge badge-danger text-dark">{{ $project->projectNotifications->count() }}</span>    </button>
                                     </div>
                                 </div>
                             </div>
