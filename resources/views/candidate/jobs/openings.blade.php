@@ -222,7 +222,15 @@
                                     </div>
                                     @endif
                                     <div class="">
-                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#notificationModal{{$project->id}}"><i class="fas fa-bell"></i>    <span class="badge badge-danger text-dark">{{ $project->projectNotifications->count() }}</span>    </button>
+                                        <button type="button"  data-bs-toggle="modal" data-bs-target="#notificationModal{{$project->id}}"  class="btn btn-warning position-relative">
+                                        <i class="fas fa-bell"></i> 
+                                        @if ($project->projectNotifications->count() > 0)
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                {{ $project->projectNotifications->count() }}
+                                                <span class="visually-hidden">unread messages</span>
+                                            </span>
+                                        @endif
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -266,12 +274,12 @@
                                 <td>{{ $notification->title }}</td>
                                 <td>
                                     @if($notification->document_upload)
-                                        {{-- <a href="{{ asset('storage/'.$notification->document_upload) }}" download class="btn btn-sm btn-primary"> --}}
-                                        <a href="{{ Storage::url($notification->document_upload) }}" download class="btn btn-sm btn-primary">
-                                            Download
-                                        </a>
+                                    {{-- <a href="{{ asset('storage/'.$notification->document_upload) }}" download class="btn btn-sm btn-primary"> --}}
+                                    <a href="{{ Storage::url($notification->document_upload) }}" download class="btn btn-sm btn-primary">
+                                        Download
+                                    </a>
                                     @else
-                                        <span class="text-muted">No File</span>
+                                    <span class="text-muted">No File</span>
                                     @endif
                                 </td>
                             </tr>
