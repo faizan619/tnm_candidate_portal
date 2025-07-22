@@ -214,7 +214,8 @@
                                 </div>
                                 <div class="mt-auto d-flex justify-content-between">
                                     <div>
-                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#positionModal{{ $project->id }}">View Position</button>
+                                        <!-- <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#positionModal{{ $project->id }}">View Position</button> -->
+                                        <a href="{{ route('FilterPositionsByProjectId',$project->id) }}" class="btn btn-danger">View Positions</a>
                                         @if($project->description)
                                         <button type="button" class="btn btn-link text-secondary" data-bs-toggle="modal" data-bs-target="#descriptionModal{{ $project->id }}">
                                             Read more
@@ -322,8 +323,8 @@
     @endforeach
 
     <!-- Modal for Positions -->
-    @foreach($projects as $project)
-    @if($project) {{-- Check if the project exists --}}
+    {{-- @foreach($projects as $project)
+    @if($project)   
     <div class="modal fade" id="positionModal{{ $project->id }}" tabindex="-1" aria-labelledby="positionModalLabel{{ $project->id }}" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
             <div class="modal-content modal-lg">
@@ -371,7 +372,7 @@
         </div>
     </div>
     @endif
-    @endforeach
+    @endforeach --}}
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="//cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
