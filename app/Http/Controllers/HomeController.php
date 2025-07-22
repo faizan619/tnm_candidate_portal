@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClientHo;
 use App\Models\Project;
+use App\Models\Requirement;
 use Illuminate\Http\Request;
 
 use App\Models\test;
@@ -83,5 +84,16 @@ class HomeController extends Controller
         }])->select('id', 'client_id', 'title')->where('status', 1)->orderBy('start_date', 'desc')->get();
 
         return view('candidate.jobs.openings', compact('projects', 'filters'));
+    }
+
+    public function FilterPositionsByProjectId($projectId){
+        $requirements = Requirement::where('project_id',$projectId)->get();
+        // $requirements = Requirement::where('project_id',2)->get();
+        $projects = Project::find($projectId);
+        // $project = Project::find(2);
+        $clients = ClientHo::pluck('name','id');
+        // return $projects;
+        return view('candidate.jobs.jobPositions',compact('requirements','project','clients'));
+
     }
 }
